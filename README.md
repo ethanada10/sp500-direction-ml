@@ -1,36 +1,59 @@
-# S&P 500 Direction Classifier — Simple ML
+# 📈 S&P 500 Direction Classifier  
+### _Machine Learning for Financial Market Prediction_
 
-**Goal:** Predict tomorrow's S&P 500 close direction (Up/Down) using simple technical features, then evaluate a naive long/flat strategy driven by the model's probability.
+---
 
-## Features
-- Lagged returns: r1...r5
-- Rolling volatility: std of r1 over 10 and 20 days
-- Moving averages: MA10, MA20 + MA ratio (MA10/MA20)
-- RSI(14)
+## 🎯 Objectif
+Prédire la **direction du S&P 500** (hausse ou baisse du lendemain) à partir d’indicateurs techniques simples.  
+Ce projet montre comment appliquer des modèles de Machine Learning supervisés à des données financières **sans sur-ingénierie** : approche claire, rigoureuse et explicable.
 
-## Models
-- Logistic Regression (baseline)
-- Random Forest (stronger non-linear baseline)
+---
 
-## Evaluation
-- Time-aware split (70% train / 30% test by date)
-- Classification metrics: Accuracy, Precision, Recall, ROC AUC
-- Strategy metrics (long if P(up) > threshold): Sharpe, CAGR, Max Drawdown, Hit Rate
-- Equity curve plot
+## ⚙️ Méthodologie
 
-## Quickstart
+### 1️⃣ Données
+- Source : **Yahoo Finance (`yfinance`)**
+- Actif : **SPY (ETF S&P 500)**  
+- Période : **2010 → 2025**
+- Fréquence : **Journalière**
+
+### 2️⃣ Features
+| Catégorie | Indicateurs |
+|------------|-------------|
+| Momentum | retards (r1 à r5) |
+| Volatilité | rolling std (10j, 20j) |
+| Tendances | MA10, MA20, MA ratio |
+| Oscillateurs | RSI(14) |
+| Target | Direction du lendemain (Up / Down) |
+
+### 3️⃣ Modèles utilisés
+- 🔹 **Logistic Regression** → baseline interprétable  
+- 🔹 **Random Forest** → modèle non-linéaire plus robuste  
+
+Les données sont découpées dans le temps (70 % train / 30 % test) pour éviter toute fuite temporelle.
+
+---
+
+## 📊 Évaluation
+
+### 🧠 Metrics ML
+- Accuracy  
+- Precision / Recall  
+- ROC-AUC  
+
+### 💵 Metrics Stratégie
+Simulation d’une stratégie simple “long/flat” :
+- Sharpe Ratio  
+- CAGR (rendement annualisé)  
+- Max Drawdown  
+- Hit Rate (pourcentage de jours positifs)  
+
+---
+
+## 🚀 Utilisation
+
+### Installation
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate      # (Windows : .venv\Scripts\activate)
 pip install -r requirements.txt
-
-# Train & evaluate on SPY daily data since 2010 (LogReg)
-python src/run.py --ticker SPY --start 2010-01-01 --end 2025-10-01 --model logreg --threshold 0.55
-
-# Try RandomForest
-python src/run.py --ticker SPY --start 2010-01-01 --end 2025-10-01 --model rf --threshold 0.55
-```
-
-## Notes
-- Educational use only — not investment advice.
-- You can switch to CAC40 proxy: `^FCHI` or ETF like `EWQ`.
